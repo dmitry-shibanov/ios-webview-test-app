@@ -47,6 +47,8 @@ jobs:
       export PAGE_SOURCE="CalWebViewApp/CalWebViewApp/page.html"
       export IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
       export PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
+      cp "${IFRAME_SOURCE}" "${IFRAME_TARGET}"
+      cp "${PAGE_SOURCE}" "${PAGE_TARGET}"
       gem update --system
       gem uninstall -Vax --force --no-abort-on-dependent calabash-cucumber
       gem uninstall -Vax --force --no-abort-on-dependent run_loop
@@ -62,6 +64,9 @@ jobs:
       git clone https://$(CalabashKeychainGitHubAccessToken)@github.com/xamarinhq/calabash-codesign.git
       calabash-codesign/apple/create-keychain.sh
     displayName: "Download and install keychain"
+
+  - script: npm install -g appcenter-cli
+    displayName: "appcenter-cli"
 
   - script: |
       cd CalWebViewApp 
