@@ -1,0 +1,86 @@
+variables:
+  # `mainJob` variable points to the matrix case that will be the main case
+  # it will publish artifacts to the Azure Blob
+  mainJob: 'Mojave-Xcode-10.2.1'
+
+trigger:
+  tags:
+    include:
+    - '*'
+  branches:
+    include:
+    - master
+pr:
+  branches:
+    include:
+    - master
+
+jobs:
+
+- job:
+  strategy:
+    matrix:
+      Mojave-Xcode-10.3:
+        IMAGE_POOL: 'macOS-10.14'
+        XCODE_VERSION: '10.3'
+      Mojave-Xcode-11.0:
+        IMAGE_POOL: 'macOS-10.14'
+        XCODE_VERSION: '11'
+  pool:
+    vmImage: $(IMAGE_POOL)
+  variables:
+  - group: XTCRunTimeArtifactsCI
+
+  steps:
+
+  - script: |
+      set -e
+      sudo xcode-select --switch "/Applications/Xcode_$(XCODE_VERSION).app/Contents/Developer"
+      echo "Xcode version: $(xcrun xcodebuild -version)"
+      echo "Xcode path: $(xcrun -f xcodebuild)"
+      echo "Xcode select path: $(xcode-select --print-path)"
+    displayName: "Select Xcode $(XCODE_VERSION)"
+
+  - script: |
+      set -e
+      ruby -v
+      echo -e "install: --no-document --env-shebang\nupdate:  --no-document --env-shebang" > ~/.gemrc
+      export IFRAME_SOURCE="CalWebViewApp/CalWebViewApp/iframe.html"
+      export PAGE_SOURCE="CalWebViewApp/CalWebViewApp/page.html"
+      export IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
+      export PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
+      gem update --system
+      gem uninstall -Vax --force --no-abort-on-dependent calabash-cucumber
+      gem uninstall -Vax --force --no-abort-on-dependent run_loop
+      gem install luffa --no-document --no-document --env-shebang --no-prerelease
+      gem install xcpretty --no-document --no-document --env-shebang --no-prerelease
+      luffa authorize
+      echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
+      bundle install
+    displayName: "Prepare Ruby Environment"
+
+  - script: |
+      set -e
+      git clone https://$(CalabashKeychainGitHubAccessToken)@github.com/xamarinhq/calabash-codesign.git
+      calabash-codesign/apple/create-keychain.sh
+    displayName: "Download and install keychain"
+
+  - script: |
+      cd CalWebViewApp 
+      make clean
+    displayName: "Clean"
+
+  - script: bundle exec bin/ci/test-cloud.rb
+    displayName: "exec test-cloud"
+
+  - script: bundle exec bin/ci/jenkins/cucumber.rb --tags ~@pending
+    displayName: "exec cucumber"
+    # We have to skip cucmber tests for Xcode 11 due to its instability.
+    # This tests will be enabled for the stable Xcode 11 release
+    condition: and(succeeded(), ne(variables['XCODE_VERSION'], '11'))
+
+  # - task: PublishTestResults@2
+  #   displayName: 'Publish Test Results'
+  #   inputs:
+  #     testResultsFiles: 'CalWebViewApp/reports/**/*.xml'
+  #   condition: always()
