@@ -75,9 +75,18 @@ jobs:
     displayName: "make clean"
 
   # - script: bundle exec bin/ci/test-cloud.rb
-  #   displayName: "exec test-cloud (make ipa-cal)"
+  - script: |
+      cd CalWebViewApp
+      bundle install
+      make ipa-cal
+    displayName: "exec test-cloud (make ipa-cal)"
 
-  - script: bundle exec bin/ci/jenkins/cucumber.rb --tags ~@pending
+  # - script: bundle exec bin/ci/jenkins/cucumber.rb --tags ~@pending
+  - script: |
+      cd CalWebViewApp
+      bundle install
+      make app-cal
+      bundle exec cucumber.rb
     displayName: "exec cucumber"
     # We have to skip cucmber tests for Xcode 11 due to its instability.
     # This tests will be enabled for the stable Xcode 11 release
