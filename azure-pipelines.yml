@@ -40,10 +40,10 @@ jobs:
     displayName: "Select Xcode $(XCODE_VERSION)"
 
   - script: |
-      export IFRAME_SOURCE="CalWebViewApp/CalWebViewApp/iframe.html"
-      export PAGE_SOURCE="CalWebViewApp/CalWebViewApp/page.html"
-      export IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
-      export PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
+      IFRAME_SOURCE="CalWebViewApp/CalWebViewApp/iframe.html"
+      PAGE_SOURCE="CalWebViewApp/CalWebViewApp/page.html"
+      IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
+      PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
     displayName: "Set variable Environment"
 
   - script: |
@@ -51,11 +51,11 @@ jobs:
       ruby -v
       echo -e "install: --no-document --env-shebang\nupdate:  --no-document --env-shebang" > ~/.gemrc
       gem update --system
-      gem uninstall -Vax --force --no-abort-on-dependent calabash-cucumber
-      gem uninstall -Vax --force --no-abort-on-dependent run_loop
-      gem install luffa --no-document --no-document --env-shebang --no-prerelease
-      gem install xcpretty --no-document --no-document --env-shebang --no-prerelease
-      luffa authorize
+      # gem uninstall -Vax --force --no-abort-on-dependent calabash-cucumber
+      # gem uninstall -Vax --force --no-abort-on-dependent run_loop
+      # gem install luffa --no-document --no-document --env-shebang --no-prerelease
+      # gem install xcpretty --no-document --no-document --env-shebang --no-prerelease
+      # luffa authorize
       echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
       bundle install
     displayName: "Prepare Ruby Environment"
@@ -70,7 +70,7 @@ jobs:
     displayName: "appcenter-cli"
 
   - script: |
-      cd CalWebViewApp 
+      cd CalWebViewApp
       make clean
     displayName: "make clean"
 
