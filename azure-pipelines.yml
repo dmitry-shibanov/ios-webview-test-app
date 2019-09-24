@@ -39,14 +39,17 @@ jobs:
       echo "Xcode select path: $(xcode-select --print-path)"
     displayName: "Select Xcode $(XCODE_VERSION)"
 
-  - script: |
-      set -e
-      ruby -v
-      echo -e "install: --no-document --env-shebang\nupdate:  --no-document --env-shebang" > ~/.gemrc
+  - scropt: |
       export IFRAME_SOURCE="CalWebViewApp/CalWebViewApp/iframe.html"
       export PAGE_SOURCE="CalWebViewApp/CalWebViewApp/page.html"
       export IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
       export PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
+    displayName: "Set variable Environment"
+
+  - script: |
+      set -e
+      ruby -v
+      echo -e "install: --no-document --env-shebang\nupdate:  --no-document --env-shebang" > ~/.gemrc
       gem update --system
       gem uninstall -Vax --force --no-abort-on-dependent calabash-cucumber
       gem uninstall -Vax --force --no-abort-on-dependent run_loop
@@ -59,7 +62,7 @@ jobs:
 
   - script: |
       set -e
-      git clone --recursive https://$(CalabashKeychainGitHubAccessToken)@github.com/xamarinhq/calabash-codesign.git
+      git clone https://$(CalabashKeychainGitHubAccessToken)@github.com/xamarinhq/calabash-codesign.git
       calabash-codesign/apple/create-keychain.sh
     displayName: "Download and install keychain"
 
@@ -69,10 +72,10 @@ jobs:
   - script: |
       cd CalWebViewApp 
       make clean
-    displayName: "Clean"
+    displayName: "make clean"
 
   - script: bundle exec bin/ci/test-cloud.rb
-    displayName: "exec test-cloud"
+    displayName: "exec test-cloud (make ipa-cal)"
 
   - script: bundle exec bin/ci/jenkins/cucumber.rb --tags ~@pending
     displayName: "exec cucumber"

@@ -21,6 +21,7 @@ if !device_set || device_set == ""
 end
 
 Dir.chdir("CalWebViewApp") do
+  Luffa.unix_command("bundle install")
   Luffa.unix_command("make ipa-cal")
   Bundler.with_clean_env do
     Luffa.unix_command("bundle update")
