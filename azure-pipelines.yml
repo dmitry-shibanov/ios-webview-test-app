@@ -47,8 +47,6 @@ jobs:
       export PAGE_SOURCE="CalWebViewApp/CalWebViewApp/page.html"
       export IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
       export PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
-      cp "${IFRAME_SOURCE}" "${IFRAME_TARGET}"
-      cp "${PAGE_SOURCE}" "${PAGE_TARGET}"
       gem update --system
       gem uninstall -Vax --force --no-abort-on-dependent calabash-cucumber
       gem uninstall -Vax --force --no-abort-on-dependent run_loop
@@ -68,10 +66,10 @@ jobs:
   - script: npm install -g appcenter-cli
     displayName: "appcenter-cli"
 
-  - script: |
-      cd CalWebViewApp 
-      make clean
-    displayName: "Clean"
+  # - script: |
+  #     cd CalWebViewApp 
+  #     make clean
+  #   displayName: "Clean"
 
   - script: bundle exec bin/ci/test-cloud.rb
     displayName: "exec test-cloud"
