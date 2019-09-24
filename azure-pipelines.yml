@@ -59,17 +59,17 @@ jobs:
 
   - script: |
       set -e
-      git clone https://$(CalabashKeychainGitHubAccessToken)@github.com/xamarinhq/calabash-codesign.git
+      git clone --recursive https://$(CalabashKeychainGitHubAccessToken)@github.com/xamarinhq/calabash-codesign.git
       calabash-codesign/apple/create-keychain.sh
     displayName: "Download and install keychain"
 
   - script: npm install -g appcenter-cli
     displayName: "appcenter-cli"
 
-  # - script: |
-  #     cd CalWebViewApp 
-  #     make clean
-  #   displayName: "Clean"
+  - script: |
+      cd CalWebViewApp 
+      make clean
+    displayName: "Clean"
 
   - script: bundle exec bin/ci/test-cloud.rb
     displayName: "exec test-cloud"
