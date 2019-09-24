@@ -39,7 +39,7 @@ jobs:
       echo "Xcode select path: $(xcode-select --print-path)"
     displayName: "Select Xcode $(XCODE_VERSION)"
 
-  - scropt: |
+  - script: |
       export IFRAME_SOURCE="CalWebViewApp/CalWebViewApp/iframe.html"
       export PAGE_SOURCE="CalWebViewApp/CalWebViewApp/page.html"
       export IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
