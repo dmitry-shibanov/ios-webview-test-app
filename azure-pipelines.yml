@@ -60,11 +60,11 @@ jobs:
       bundle install
     displayName: "Prepare Ruby Environment"
 
-  - script: |
-      set -e
-      git clone https://$(CalabashKeychainGitHubAccessToken)@github.com/xamarinhq/calabash-codesign.git
-      calabash-codesign/apple/create-keychain.sh
-    displayName: "Download and install keychain"
+  # - script: |
+  #     set -e
+  #     git clone https://$(CalabashKeychainGitHubAccessToken)@github.com/xamarinhq/calabash-codesign.git
+  #     calabash-codesign/apple/create-keychain.sh
+  #   displayName: "Download and install keychain"
 
   - script: npm install -g appcenter-cli
     displayName: "appcenter-cli"
@@ -74,8 +74,8 @@ jobs:
       make clean
     displayName: "make clean"
 
-  - script: bundle exec bin/ci/test-cloud.rb
-    displayName: "exec test-cloud (make ipa-cal)"
+  # - script: bundle exec bin/ci/test-cloud.rb
+  #   displayName: "exec test-cloud (make ipa-cal)"
 
   - script: bundle exec bin/ci/jenkins/cucumber.rb --tags ~@pending
     displayName: "exec cucumber"
