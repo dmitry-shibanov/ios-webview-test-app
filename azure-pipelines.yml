@@ -41,7 +41,6 @@ jobs:
 
   - script: |
       export IFRAME_SOURCE="CalWebViewApp/CalWebViewApp/iframe.html"
-      export PAGE_SOURCE="CalWebViewApp/CalWebViewApp/page.html"
       export IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
       export PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
     displayName: "Set variable Environment"
@@ -53,8 +52,8 @@ jobs:
       gem update --system
       # gem uninstall -Vax --force --no-abort-on-dependent calabash-cucumber
       # gem uninstall -Vax --force --no-abort-on-dependent run_loop
-      gem install luffa --no-document --no-document --env-shebang --no-prerelease
-      gem install xcpretty --no-document --no-document --env-shebang --no-prerelease
+      # gem install luffa --no-document --no-document --env-shebang --no-prerelease
+      # gem install xcpretty --no-document --no-document --env-shebang --no-prerelease
       # luffa authorize
       echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
       bundle install
@@ -68,19 +67,10 @@ jobs:
       make clean
     displayName: "make clean"
 
-  # - script: bundle exec bin/ci/test-cloud.rb
-  - script: |
-      cd CalWebViewApp
-      bundle install
-      make ipa-cal
+  - script: bundle exec bin/ci/test-cloud.rb
     displayName: "exec test-cloud (make ipa-cal)"
 
-  # - script: bundle exec bin/ci/jenkins/cucumber.rb --tags ~@pending
-  - script: |
-      cd CalWebViewApp
-      bundle install
-      make app-cal
-      bundle exec cucumber.rb
+  - script: bundle exec bin/ci/jenkins/cucumber.rb
     displayName: "exec cucumber"
     # We have to skip cucmber tests for Xcode 11 due to its instability.
     # This tests will be enabled for the stable Xcode 11 release
