@@ -67,6 +67,9 @@ jobs:
       make clean
     displayName: "make clean"
 
+  - script: bundle exec bin/ci/travis/run.rb
+    displayName: "make app-call"
+
   - script: bundle exec bin/ci/test-cloud.rb
     displayName: "exec test-cloud (make ipa-cal)"
 
