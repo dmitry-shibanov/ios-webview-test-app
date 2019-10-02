@@ -45,8 +45,8 @@ jobs:
       PAGE_SOURCE="CalWebViewApp/CalWebViewApp/page.html"
       IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
       PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
-      cp "${IFRAME_SOURCE}" "${IFRAME_TARGET}"
-      cp "${PAGE_SOURCE}" "${PAGE_TARGET}"
+      # cp "${IFRAME_SOURCE}" "${IFRAME_TARGET}"
+      # cp "${PAGE_SOURCE}" "${PAGE_TARGET}"
     displayName: "Set variable Environment"
 
   - script: |
