@@ -40,21 +40,20 @@ jobs:
     displayName: "Select Xcode $(XCODE_VERSION)"
 
   - script: |
-      export IFRAME_SOURCE="CalWebViewApp/CalWebViewApp/iframe.html"
-      export IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
-      export PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
-    displayName: "Set variable Environment"
+      set -e
+      IFRAME_SOURCE="CalWebViewApp/CalWebViewApp/iframe.html"
+      PAGE_SOURCE="CalWebViewApp/CalWebViewApp/page.html"
+      IFRAME_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/iframe.html"
+      PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
+      cp "${IFRAME_SOURCE}" "${IFRAME_TARGET}"
+      cp "${PAGE_SOURCE}" "${PAGE_TARGET}"
+     displayName: "Set variable Environment"
 
   - script: |
       set -e
       ruby -v
       echo -e "install: --no-document --env-shebang\nupdate:  --no-document --env-shebang" > ~/.gemrc
-      gem update --system
-      # gem uninstall -Vax --force --no-abort-on-dependent calabash-cucumber
-      # gem uninstall -Vax --force --no-abort-on-dependent run_loop
-      echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
       bundle install
-      luffa authorize
     displayName: "Prepare Ruby Environment"
 
   - script: |
@@ -63,20 +62,11 @@ jobs:
       calabash-codesign/apple/create-keychain.sh
     displayName: "Download and install keychain"
 
-  - script: npm install -g appcenter-cli
-    displayName: "appcenter-cli"
-
   - script: |
       set -e
-      cd CalWebViewApp
-      make clean
-    displayName: "make clean"
-
-  - script: bundle exec bin/ci/travis/run.rb
+      bundle install
+      make app-cal
     displayName: "make app-call"
-
-  - script: bundle exec bin/ci/test-cloud.rb
-    displayName: "exec test-cloud (make ipa-cal)"
 
   - script: bundle exec bin/ci/jenkins/cucumber.rb
     displayName: "exec cucumber"
