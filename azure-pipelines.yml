@@ -47,7 +47,7 @@ jobs:
       PAGE_TARGET="/Library/Server/Web/Data/Sites/Default/CalWebViewApp/page.html"
       cp "${IFRAME_SOURCE}" "${IFRAME_TARGET}"
       cp "${PAGE_SOURCE}" "${PAGE_TARGET}"
-     displayName: "Set variable Environment"
+    displayName: "Set variable Environment"
 
   - script: |
       set -e
