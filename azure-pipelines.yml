@@ -65,6 +65,7 @@ jobs:
 
   - script: |
       set -e
+      cd CalWebViewApp
       bundle install
       make app-cal
     displayName: "make app-call"
