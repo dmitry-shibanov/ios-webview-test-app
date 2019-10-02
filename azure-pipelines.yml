@@ -52,16 +52,14 @@ jobs:
       gem update --system
       # gem uninstall -Vax --force --no-abort-on-dependent calabash-cucumber
       # gem uninstall -Vax --force --no-abort-on-dependent run_loop
-      # gem install luffa --no-document --no-document --env-shebang --no-prerelease
-      # gem install xcpretty --no-document --no-document --env-shebang --no-prerelease
-      # luffa authorize
       echo -e "machine github.com\n  login $CI_USER_TOKEN" >> ~/.netrc
       bundle install
+      luffa authorize
     displayName: "Prepare Ruby Environment"
 
   - script: |
       set -e
-      git clone https://$(CalabashKeychainGitHubAccessToken)@github.com/dmitry-shibanov/calabash-codesign.git
+      git clone https://$(CalabashKeychainGitHubAccessToken)@github.com/xamarinhq/calabash-codesign.git
       calabash-codesign/apple/create-keychain.sh
     displayName: "Download and install keychain"
 
@@ -69,6 +67,7 @@ jobs:
     displayName: "appcenter-cli"
 
   - script: |
+      set -e
       cd CalWebViewApp
       make clean
     displayName: "make clean"
@@ -81,12 +80,9 @@ jobs:
 
   - script: bundle exec bin/ci/jenkins/cucumber.rb
     displayName: "exec cucumber"
-    # We have to skip cucmber tests for Xcode 11 due to its instability.
-    # This tests will be enabled for the stable Xcode 11 release
-    # condition: and(succeeded(), ne(variables['XCODE_VERSION'], '11'))
 
-  # - task: PublishTestResults@2
-  #   displayName: 'Publish Test Results'
-  #   inputs:
-  #     testResultsFiles: 'CalWebViewApp/reports/**/*.xml'
-  #   condition: always()
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results'
+    inputs:
+      testResultsFiles: 'CalWebViewApp/reports/**/*.xml'
+    condition: always()
