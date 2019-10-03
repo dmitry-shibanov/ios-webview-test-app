@@ -32,7 +32,7 @@ Dir.chdir working_dir do
     xcode = RunLoop::Xcode.new
     simctl = RunLoop::Simctl.new
 
-    if xcode_version.major < 11
+    if xcode.version.major < 11
       devices = {
         :iphoneXs => 'iPhone Xs',
         :iphoneXr => 'iPhone Xʀ'
