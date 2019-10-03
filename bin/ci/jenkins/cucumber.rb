@@ -34,13 +34,17 @@ Dir.chdir working_dir do
 
     if xcode.version.major < 11
       devices = {
-        :iphoneXs => 'iPhone Xs',
-        :iphoneXr => 'iPhone Xʀ'
+        :iphoneXs => select_sim_by_name(simctl,
+        "iPhone Xs"),
+        :iphoneXr => select_sim_by_name(simctl,
+        "iPhone Xʀ")
       }
     else
       devices = {
-        :iphoneXs => 'iPhone 11 Pro',
-        :iphoneXr => 'iPhone 11'
+        :iphone11Pro => select_sim_by_name(simctl,
+        "iPhone 11 Pro"),
+        :iphone11 => select_sim_by_name(simctl,
+        'iPhone 11')
       }
     end
 
